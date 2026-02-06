@@ -10,6 +10,7 @@ class AppSettings:
     """Application settings"""
     play_sound_on_install: bool = True
     sound_theme: str = "default"  # Can be "default", "glass", "bloop", etc.
+    auto_make_executable: bool = True  # Automatically make AppImages executable
     
 
 class SettingsManager:
@@ -53,4 +54,13 @@ class SettingsManager:
     @sound_theme.setter
     def sound_theme(self, value: str):
         self._settings.sound_theme = value
+        self.save()
+    
+    @property
+    def auto_make_executable(self) -> bool:
+        return self._settings.auto_make_executable
+    
+    @auto_make_executable.setter
+    def auto_make_executable(self, value: bool):
+        self._settings.auto_make_executable = value
         self.save()

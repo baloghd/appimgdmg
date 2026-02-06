@@ -1,9 +1,11 @@
-- [ ] FEATURE: add settings dialog
+- [x] FEATURE: add settings dialog
 - [ ] FEATURE: add support for multiple languages
 - [ ] FEATURE: handle .dkpg / .rpm files
 - [ ] IMPROVEMENT: package up as dpkg
 - [ ] IMPROVEMENT: add support for more package managers (e.g. apt, yum)
 - [x] FEATURE: add MacOS-style 'sound' after installation
-- [ ] FEATURE: make sound notification optional / configurable
+- [x] FEATURE: make sound notification optional / configurable
 - [ ] IMPROVEMENT: add test suite
 - [ ] FEATURE: make the app file opener for .appimage files
+- [x] FEATURE: "make executable" should be an option on UI, autoset to true - but user can disable it if they want
+- [ ] FEATURE: add system notification for successful installation / failure

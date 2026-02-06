@@ -12,6 +12,7 @@ from ..appimage import AppImageParser, AppImageInfo
 from ..installer import AppImageInstaller
 from ..settings import SettingsManager
 from ..sound import SoundManager, MockSoundManager
+from .settings_dialog import SettingsDialog
 
 
 # CSS for the macOS-style appearance
@@ -127,7 +128,7 @@ class MainWindow(Adw.ApplicationWindow):
         
         # Initialize settings and sound
         self.settings = SettingsManager()
-        self.sound = SoundManager() if self.settings.play_sound else MockSoundManager()
+        self.sound = SoundManager(self.settings)
         
         self._setup_css()
         self._build_ui()
@@ -152,6 +153,13 @@ class MainWindow(Adw.ApplicationWindow):
         # Header bar
         header = Adw.HeaderBar()
         header.set_title_widget(Gtk.Label(label="AppImg"))
+        
+        # Settings button
+        settings_button = Gtk.Button.new_from_icon_name("preferences-system-symbolic")
+        settings_button.set_tooltip_text("Settings")
+        settings_button.connect("clicked", self._on_settings_clicked)
+        header.pack_end(settings_button)
+        
         box.append(header)
         
         # Main content area with toast overlay
@@ -262,6 +270,32 @@ class MainWindow(Adw.ApplicationWindow):
         self.debug_expander.set_child(debug_scroll)
         
         self.debug_buffer = self.debug_text.get_buffer()
+        
+        # Footer with settings
+        footer = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=12,
+            halign=Gtk.Align.CENTER,
+            margin_top=12
+        )
+        self.drop_area.append(footer)
+        
+        # Make executable toggle
+        self.make_exec_switch = Gtk.Switch()
+        self.make_exec_switch.set_active(self.settings.auto_make_executable)
+        self.make_exec_switch.connect("state-set", self._on_make_exec_toggled)
+        
+        make_exec_label = Gtk.Label(label="Make executable")
+        make_exec_label.set_margin_end(8)
+        
+        footer.append(make_exec_label)
+        footer.append(self.make_exec_switch)
+    
+    def _on_make_exec_toggled(self, switch, state):
+        """Handle make executable toggle change"""
+        self.settings.auto_make_executable = state
+        self._debug_print(f"Make executable: {'ON' if state else 'OFF'}")
+        return False
     
     def _setup_file_drop(self):
         """Setup drag and drop for loading AppImage files"""
@@ -439,7 +473,11 @@ class MainWindow(Adw.ApplicationWindow):
         
         try:
             installer = AppImageInstaller(debug=self.debug_mode)
-            installed_app = installer.install(str(self.current_appimage), self.current_info)
+            installed_app = installer.install(
+                str(self.current_appimage), 
+                self.current_info,
+                make_executable=self.settings.auto_make_executable
+            )
             
             if installed_app:
                 self.installed_app = installed_app  # Store for reveal button
@@ -546,3 +584,8 @@ class MainWindow(Adw.ApplicationWindow):
         toast = Adw.Toast(title=message, timeout=5)
         self.toast_overlay.add_toast(toast)
         self._debug_print(f"ERROR: {message}")
+    
+    def _on_settings_clicked(self, button):
+        """Open settings dialog"""
+        dialog = SettingsDialog(parent=self)
+        dialog.present()

@@ -12,9 +12,16 @@ from pathlib import Path
 class SoundManager:
     """Manage sound effects for the application"""
     
-    def __init__(self):
-        self.enabled = True
+    def __init__(self, settings_manager=None):
+        self.settings = settings_manager
         self._canberra_available = self._check_canberra()
+    
+    @property
+    def enabled(self):
+        """Check if sounds are enabled based on settings"""
+        if self.settings:
+            return self.settings.play_sound
+        return True
         
     def _check_canberra(self) -> bool:
         """Check if canberra-gtk-play is available"""

@@ -22,7 +22,7 @@ class AppImageInstaller:
         self.icons_dir = self.local_share / "icons" / "hicolor"
         self.registry = InstalledAppsManager()
         
-    def install(self, appimage_path: str, info: AppImageInfo) -> InstalledApp:
+    def install(self, appimage_path: str, info: AppImageInfo, make_executable: bool = True) -> InstalledApp:
         """Install an AppImage to ~/Applications with desktop integration"""
         appimage_src = Path(appimage_path)
         
@@ -43,7 +43,14 @@ class AppImageInstaller:
         try:
             # Copy AppImage
             shutil.copy2(appimage_src, target_appimage)
-            target_appimage.chmod(0o755)  # Make executable
+            # Make executable if requested
+            if make_executable:
+                target_appimage.chmod(0o755)
+                if self.debug:
+                    print(f"[DEBUG] Made {target_appimage} executable")
+            else:
+                if self.debug:
+                    print(f"[DEBUG] Skipped making {target_appimage} executable (user preference)")
             
             # Install icon if found
             if info.icon_path:
