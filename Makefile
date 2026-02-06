@@ -1,7 +1,7 @@
 # AppImg Makefile
 # macOS-style AppImage installer for Linux
 
-.PHONY: help setup run debug format check test clean clean-all deps install-deps
+.PHONY: help setup run debug format check test clean clean-all deps install-deps install-desktop uninstall-desktop
 
 # Default target
 help:
@@ -14,6 +14,8 @@ help:
 	@echo "  make run APP=path   - Run with specific AppImage"
 	@echo "  make debug APP=path - Run in debug mode with verbose output"
 	@echo "  make list           - List all installed AppImages"
+	@echo "  make install-desktop   - Register appimg as default AppImage handler"
+	@echo "  make uninstall-desktop - Restore previous default handler"
 	@echo "  make format         - Format code with black and ruff"
 	@echo "  make check          - Run linting and type checks"
 	@echo "  make test           - Run tests"
@@ -64,6 +66,16 @@ endif
 list:
 	@echo "Listing installed AppImages..."
 	uv run appimg-list
+
+# Register appimg as default AppImage handler
+install-desktop:
+	@echo "Registering appimg as default AppImage handler..."
+	python3 scripts/install-desktop.py
+
+# Unregister appimg and restore previous handler
+uninstall-desktop:
+	@echo "Unregistering appimg as default AppImage handler..."
+	python3 scripts/uninstall-desktop.py
 
 # Format code
 format:
