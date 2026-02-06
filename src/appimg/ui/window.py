@@ -15,7 +15,6 @@ from ..installer import AppImageInstaller
 # CSS for the macOS-style appearance
 CSS_STYLES = """
 .drop-area {
-    background: alpha(@accent_bg_color, 0.1);
     border-radius: 24px;
     border: 3px dashed alpha(@accent_color, 0.3);
     padding: 48px;
@@ -23,7 +22,6 @@ CSS_STYLES = """
 }
 
 .drop-area.drag-over {
-    background: alpha(@accent_bg_color, 0.2);
     border-color: @accent_color;
     border-style: solid;
     transform: scale(1.02);
