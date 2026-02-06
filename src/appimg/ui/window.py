@@ -122,6 +122,7 @@ class MainWindow(Adw.ApplicationWindow):
         
         self.current_appimage: Path = None
         self.current_info: AppImageInfo = None
+        self.installed_app = None  # Track installed app for reveal button
         self.debug_mode = True  # Always enable debug for now
         
         self._setup_css()
@@ -434,14 +435,24 @@ class MainWindow(Adw.ApplicationWindow):
         
         try:
             installer = AppImageInstaller(debug=self.debug_mode)
-            success = installer.install(str(self.current_appimage), self.current_info)
+            installed_app = installer.install(str(self.current_appimage), self.current_info)
             
-            if success:
+            if installed_app:
+                self.installed_app = installed_app  # Store for reveal button
                 self._show_success(f"Installed {self.current_info.name}")
                 self._debug_print(f"Successfully installed {self.current_info.name}")
+                self._debug_print(f"Source: {self.current_appimage}")
+                self._debug_print(f"Installed to: {installed_app.install_path}")
                 
-                # Keep the installed app visible - don't reset
-                self.instructions.set_text(f"✓ {self.current_info.name} installed successfully")
+                # Show install details in UI
+                source_name = self.current_appimage.name
+                self.instructions.set_text(
+                    f"✓ {self.current_info.name} installed\n"
+                    f"From: {source_name}"
+                )
+                
+                # Add reveal button
+                self._add_reveal_button()
             
         except Exception as e:
             self._show_error(f"Installation failed: {e}")
@@ -452,6 +463,33 @@ class MainWindow(Adw.ApplicationWindow):
             # Cleanup temp files
             if self.current_info:
                 self.current_info.cleanup()
+    
+    def _add_reveal_button(self):
+        """Add a button to reveal the installed app in file manager"""
+        # Check if button already exists
+        for child in self.drop_area.observe_children():
+            if isinstance(child, Gtk.Button) and child.get_label() == "Show in Folder":
+                return
+        
+        reveal_btn = Gtk.Button(label="Show in Folder")
+        reveal_btn.add_css_class("suggested-action")
+        reveal_btn.add_css_class("pill")
+        reveal_btn.set_margin_top(12)
+        reveal_btn.connect("clicked", self._on_reveal_clicked)
+        self.drop_area.append(reveal_btn)
+        reveal_btn.grab_focus()
+    
+    def _on_reveal_clicked(self, button):
+        """Open file manager to show the installed AppImage"""
+        if not self.installed_app:
+            return
+        
+        install_path = Path(self.installed_app.install_path)
+        if install_path.exists():
+            # Use xdg-open to reveal the file
+            import subprocess
+            subprocess.run(["xdg-open", str(install_path.parent)])
+            self._debug_print(f"Opened folder: {install_path.parent}")
     
     def _reset_ui(self):
         """Reset the UI to initial state"""

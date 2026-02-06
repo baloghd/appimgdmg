@@ -3,6 +3,7 @@
 import subprocess
 import tempfile
 import shutil
+import os
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional
@@ -20,6 +21,7 @@ class AppImageInfo:
     comment: str
     desktop_file_content: str
     temp_extract_dir: Optional[Path]
+    version: Optional[str] = None
     
     def cleanup(self):
         """Remove temporary extraction directory"""
@@ -72,6 +74,15 @@ class AppImageParser:
     
     def _extract_appimage(self):
         """Extract AppImage using --appimage-extract"""
+        # Check if file is executable, make it executable if needed
+        if not os.access(self.appimage_path, os.X_OK):
+            if self.debug:
+                print(f"[DEBUG] Making AppImage executable: {self.appimage_path}")
+            try:
+                self.appimage_path.chmod(self.appimage_path.stat().st_mode | 0o111)
+            except PermissionError as e:
+                raise RuntimeError(f"Cannot make AppImage executable: {e}")
+        
         result = subprocess.run(
             [str(self.appimage_path), "--appimage-extract"],
             cwd=self._temp_dir,

@@ -1,0 +1,9 @@
+- [ ] FEATURE: add settings dialog
+- [ ] FEATURE: add support for multiple languages
+- [ ] FEATURE: handle .dkpg / .rpm files
+- [ ] IMPROVEMENT: package up as dpkg
+- [ ] IMPROVEMENT: add support for more package managers (e.g. apt, yum)
+- [ ] FEATURE: add MacOS-style 'sound' after installation
+- [ ] FEATURE: make sound notification optional / configurable
+- [ ] IMPROVEMENT: add test suite
+- [ ] FEATURE: make the app file opener for .appimage files

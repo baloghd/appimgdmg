@@ -10,6 +10,7 @@ dependencies = [
 [project.scripts]
 appimg = "appimg:main"
 appimg-debug = "appimg:debug_main"
+appimg-list = "appimg:list_main"
 
 [build-system]
 requires = ["hatchling"]

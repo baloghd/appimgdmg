@@ -72,3 +72,33 @@ def debug_main():
         return 1
     
     return 0
+
+
+def list_main():
+    """List all installed AppImages"""
+    from .installed import InstalledAppsManager
+    
+    manager = InstalledAppsManager()
+    apps = manager.get_all()
+    
+    if not apps:
+        print("No AppImages installed.")
+        print(f"\nInstall location: {Path.home() / 'Applications'}")
+        return 0
+    
+    print(f"\n=== Installed AppImages ({len(apps)}) ===\n")
+    
+    for app in apps:
+        print(f"📦 {app.name}")
+        if app.version:
+            print(f"   Version: {app.version}")
+        print(f"   Source: {app.source_path}")
+        print(f"   Installed: {app.install_path}")
+        print(f"   Date: {app.install_date}")
+        if app.categories:
+            print(f"   Categories: {', '.join(app.categories)}")
+        print()
+    
+    print(f"Registry: {manager.registry_file}")
+    print(f"Apps folder: {Path.home() / 'Applications'}")
+    return 0

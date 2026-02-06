@@ -11,7 +11,9 @@ help:
 	@echo "  make setup          - Install Python dependencies with uv"
 	@echo "  make deps           - Install system dependencies (Ubuntu/Debian)"
 	@echo "  make run            - Run the application"
+	@echo "  make run APP=path   - Run with specific AppImage"
 	@echo "  make debug APP=path - Run in debug mode with verbose output"
+	@echo "  make list           - List all installed AppImages"
 	@echo "  make format         - Format code with black and ruff"
 	@echo "  make check          - Run linting and type checks"
 	@echo "  make test           - Run tests"
@@ -57,6 +59,11 @@ else
 	@echo "Usage: make debug APP=/path/to/app.AppImage"
 	@exit 1
 endif
+
+# List installed AppImages
+list:
+	@echo "Listing installed AppImages..."
+	uv run appimg-list
 
 # Format code
 format:
