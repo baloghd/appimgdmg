@@ -12,6 +12,7 @@ from ..appimage import AppImageParser, AppImageInfo
 from ..installer import AppImageInstaller
 from ..settings import SettingsManager
 from ..sound import SoundManager, MockSoundManager
+from ..notifications import NotificationManager
 from .settings_dialog import SettingsDialog
 
 
@@ -126,9 +127,15 @@ class MainWindow(Adw.ApplicationWindow):
         self.installed_app = None  # Track installed app for reveal button
         self.debug_mode = True  # Always enable debug for now
         
-        # Initialize settings and sound
+        # Initialize settings, sound, and notifications
         self.settings = SettingsManager()
         self.sound = SoundManager(self.settings)
+        self.notifications = NotificationManager("appimg", self.settings)
+        
+        # Get application reference for notifications
+        app = self.get_application()
+        if app:
+            self.notifications.set_application(app)
         
         self._setup_css()
         self._build_ui()
@@ -486,6 +493,9 @@ class MainWindow(Adw.ApplicationWindow):
                 # Play success sound
                 self.sound.play_success()
                 
+                # Show system notification
+                self.notifications.show_install_success(self.current_info.name, str(installed_app.install_path))
+                
                 self._debug_print(f"Successfully installed {self.current_info.name}")
                 self._debug_print(f"Source: {self.current_appimage}")
                 self._debug_print(f"Installed to: {installed_app.install_path}")
@@ -502,6 +512,11 @@ class MainWindow(Adw.ApplicationWindow):
             
         except Exception as e:
             self._show_error(f"Installation failed: {e}")
+            
+            # Show system notification for failure
+            if self.current_info:
+                self.notifications.show_install_failure(self.current_info.name, str(e))
+            
             if self.debug_mode:
                 import traceback
                 self._debug_print(traceback.format_exc())

@@ -11,6 +11,7 @@ class AppSettings:
     play_sound_on_install: bool = True
     sound_theme: str = "default"  # Can be "default", "glass", "bloop", etc.
     auto_make_executable: bool = True  # Automatically make AppImages executable
+    show_notifications: bool = True  # Show system notifications
     
 
 class SettingsManager:
@@ -63,4 +64,13 @@ class SettingsManager:
     @auto_make_executable.setter
     def auto_make_executable(self, value: bool):
         self._settings.auto_make_executable = value
+        self.save()
+    
+    @property
+    def show_notifications(self) -> bool:
+        return self._settings.show_notifications
+    
+    @show_notifications.setter
+    def show_notifications(self, value: bool):
+        self._settings.show_notifications = value
         self.save()

@@ -57,6 +57,15 @@ class SettingsDialog(Gtk.Dialog):
             self._on_sound_toggled
         )
         
+        # System notifications toggle
+        self._create_switch_row(
+            settings_box,
+            "System Notifications",
+            "Show desktop notifications for install status",
+            self.settings.show_notifications,
+            self._on_notifications_toggled
+        )
+        
         # Show current status
         status_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
         status_box.set_margin_top(8)
@@ -108,6 +117,11 @@ class SettingsDialog(Gtk.Dialog):
     def _on_sound_toggled(self, switch, state):
         """Handle sound toggle"""
         self.settings.play_sound = state
+        return False
+    
+    def _on_notifications_toggled(self, switch, state):
+        """Handle notifications toggle"""
+        self.settings.show_notifications = state
         return False
     
     def _on_response(self, dialog, response_id):

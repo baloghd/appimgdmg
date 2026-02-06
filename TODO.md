@@ -8,4 +8,4 @@
 - [ ] IMPROVEMENT: add test suite
 - [ ] FEATURE: make the app file opener for .appimage files
 - [x] FEATURE: "make executable" should be an option on UI, autoset to true - but user can disable it if they want
-- [ ] FEATURE: add system notification for successful installation / failure
+- [x] FEATURE: add system notification for successful installation / failure
