@@ -10,6 +10,8 @@ from pathlib import Path
 
 from ..appimage import AppImageParser, AppImageInfo
 from ..installer import AppImageInstaller
+from ..settings import SettingsManager
+from ..sound import SoundManager, MockSoundManager
 
 
 # CSS for the macOS-style appearance
@@ -122,6 +124,10 @@ class MainWindow(Adw.ApplicationWindow):
         self.current_info: AppImageInfo = None
         self.installed_app = None  # Track installed app for reveal button
         self.debug_mode = True  # Always enable debug for now
+        
+        # Initialize settings and sound
+        self.settings = SettingsManager()
+        self.sound = SoundManager() if self.settings.play_sound else MockSoundManager()
         
         self._setup_css()
         self._build_ui()
@@ -438,6 +444,10 @@ class MainWindow(Adw.ApplicationWindow):
             if installed_app:
                 self.installed_app = installed_app  # Store for reveal button
                 self._show_success(f"Installed {self.current_info.name}")
+                
+                # Play success sound
+                self.sound.play_success()
+                
                 self._debug_print(f"Successfully installed {self.current_info.name}")
                 self._debug_print(f"Source: {self.current_appimage}")
                 self._debug_print(f"Installed to: {installed_app.install_path}")

@@ -11,6 +11,7 @@ dependencies = [
 appimg = "appimg:main"
 appimg-debug = "appimg:debug_main"
 appimg-list = "appimg:list_main"
+appimg-sound = "appimg:sound_toggle_main"
 
 [build-system]
 requires = ["hatchling"]

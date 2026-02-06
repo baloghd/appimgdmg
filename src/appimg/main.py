@@ -102,3 +102,20 @@ def list_main():
     print(f"Registry: {manager.registry_file}")
     print(f"Apps folder: {Path.home() / 'Applications'}")
     return 0
+
+
+def sound_toggle_main():
+    """Toggle sound notifications on/off"""
+    from .settings import SettingsManager
+    
+    settings = SettingsManager()
+    
+    # Toggle current value
+    new_value = not settings.play_sound
+    settings.play_sound = new_value
+    
+    status = "ON" if new_value else "OFF"
+    print(f"Sound notifications: {status}")
+    print(f"Settings saved to: {settings.settings_file}")
+    
+    return 0
