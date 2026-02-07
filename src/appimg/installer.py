@@ -118,28 +118,27 @@ class AppImageInstaller:
 
         shutil.copy2(icon_path, target_path)
 
-    def _is_electron_app(self, appimage_path: Path) -> bool:
-        """Detect if AppImage is Electron-based by checking for Chrome sandbox"""
+    def _is_electron_app(self, info: AppImageInfo) -> bool:
+        """Detect if AppImage is Electron-based by checking for Chrome sandbox in extracted files"""
         try:
-            # Test if the app runs without --no-sandbox
-            result = subprocess.run(
-                [str(appimage_path), "--version"], capture_output=True, timeout=10
-            )
+            # Check for chrome-sandbox binary in the extracted AppImage (search recursively)
+            temp_dir = info.temp_extract_dir
+            if temp_dir is None:
+                return False
 
-            # Check stderr for sandbox-related errors even if exit code is 0
-            stderr = result.stderr.decode("utf-8", errors="ignore").lower()
-            if "sandbox" in stderr or "setuid" in stderr or "namespace" in stderr:
-                return True
-
-            # If return code is non-zero, check for sandbox errors
-            if result.returncode != 0:
-                if "sandbox" in stderr or "setuid" in stderr or "namespace" in stderr:
-                    return True
+            # Search for chrome-sandbox in all subdirectories
+            squashfs_root = temp_dir / "squashfs-root"
+            if squashfs_root.exists():
+                for chrome_sandbox in squashfs_root.rglob("chrome-sandbox"):
+                    if chrome_sandbox.exists():
+                        if self.debug:
+                            print(
+                                f"[DEBUG] Detected Electron app (chrome-sandbox found at {chrome_sandbox})"
+                            )
+                        return True
 
             return False
 
-        except subprocess.TimeoutExpired:
-            return False
         except Exception as e:
             if self.debug:
                 print(f"[DEBUG] Error detecting Electron app: {e}")
@@ -155,7 +154,7 @@ class AppImageInstaller:
         exec_path = shlex.quote(str(appimage_path))
 
         # Check if this is an Electron app that needs --no-sandbox
-        is_electron = self._is_electron_app(appimage_path)
+        is_electron = self._is_electron_app(info)
 
         if is_electron:
             exec_path = f"{exec_path} --no-sandbox"

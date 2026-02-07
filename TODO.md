@@ -8,8 +8,8 @@
 - [ ] FEATURE: add progress bar for installation process
 - [x] FEATURE: add option to choose installation directory
 - [x] BUG: if user tries to install an appimage that is already installed, it should prompt them to either overwrite the existing one or cancel the installation, not fail with an error
-- [ ] BUG: application gets launched immediately after installation, even if the user has not chosen to do so (and we get the application is not responding error)
-  - Reverted to working version (d391c63) - need to re-implement overwrite confirmation differently
+- [x] BUG: application gets launched immediately after installation, even if the user has not chosen to do so (and we get the application is not responding error)
+  - Fixed: `_is_electron_app()` was running the AppImage with subprocess to detect Electron. Now checks for chrome-sandbox file in extracted AppImage instead.
 
 
 ## File/Package Support
