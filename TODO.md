@@ -10,7 +10,7 @@
 - [x] BUG: if user tries to install an appimage that is already installed, it should prompt them to either overwrite the existing one or cancel the installation, not fail with an error
 - [x] BUG: application gets launched immediately after installation, even if the user has not chosen to do so (and we get the application is not responding error)
   - Fixed: `_is_electron_app()` was running the AppImage with subprocess to detect Electron. Now checks for chrome-sandbox file in extracted AppImage instead.
-- [ ] BUG: we make the file executable even if we don't install it -> only make executable if user chooses to install
+- [x] BUG: we make the file executable even if we don't install it -> only make executable if user chooses to install
 
 ## File/Package Support
 - [ ] FEATURE: handle .dkpg / .rpm files
