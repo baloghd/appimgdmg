@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Install appimg as the default handler for AppImage files"""
 
-import sys
 import shutil
 from pathlib import Path
 import subprocess
@@ -64,7 +63,7 @@ def main():
     if str(bin_dir) not in os.environ.get("PATH", ""):
         print(f"\n⚠️  Warning: {bin_dir} may not be in your PATH")
         print("   Add this to your ~/.bashrc or ~/.zshrc:")
-        print(f'   export PATH="$HOME/.local/bin:$PATH"')
+        print('   export PATH="$HOME/.local/bin:$PATH"')
     
     print("\n✅ Installation complete!")
     print("Right-click any .appimage file → 'Open With' → 'AppImg Installer'")

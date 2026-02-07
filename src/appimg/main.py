@@ -6,11 +6,10 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 
-from gi.repository import Gtk, Adw, Gio, GLib
+from gi.repository import Adw, Gio
 from pathlib import Path
 
 from .appimage import AppImageParser
-from .installer import AppImageInstaller
 from .ui.window import MainWindow
 
 
@@ -48,16 +47,15 @@ def debug_main():
     parser.add_argument("--appimage", "-a", required=True, help="Path to AppImage file")
     args = parser.parse_args()
     
-    from .appimage import AppImageParser
     
-    print(f"\n=== AppImage Debug Analysis ===\n")
+    print("\n=== AppImage Debug Analysis ===\n")
     print(f"File: {args.appimage}\n")
     
     try:
         parser = AppImageParser(args.appimage, debug=True)
         info = parser.parse()
         
-        print(f"\n\nSummary:")
+        print("\n\nSummary:")
         print(f"  Name: {info.name}")
         print(f"  Icon: {info.icon_name} ({info.icon_path})")
         print(f"  Categories: {', '.join(info.categories) if info.categories else 'None'}")
@@ -65,7 +63,7 @@ def debug_main():
         
         # Cleanup temp files
         info.cleanup()
-        print(f"\nCleanup complete.\n")
+        print("\nCleanup complete.\n")
         
     except Exception as e:
         print(f"ERROR: {e}")

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Uninstall appimg and restore previous default handler"""
 
-import sys
 from pathlib import Path
 import subprocess
 

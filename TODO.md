@@ -1,11 +1,22 @@
+## UI/UX Features
 - [x] FEATURE: add settings dialog
-- [ ] FEATURE: add support for multiple languages
-- [ ] FEATURE: handle .dkpg / .rpm files
-- [ ] IMPROVEMENT: package up as dpkg
-- [ ] IMPROVEMENT: add support for more package managers (e.g. apt, yum)
 - [x] FEATURE: add MacOS-style 'sound' after installation
 - [x] FEATURE: make sound notification optional / configurable
-- [ ] IMPROVEMENT: add test suite
-- [ ] FEATURE: make the app file opener for .appimage files
 - [x] FEATURE: "make executable" should be an option on UI, autoset to true - but user can disable it if they want
 - [x] FEATURE: add system notification for successful installation / failure
+- [ ] FEATURE: add support for multiple languages
+- [ ] FEATURE: add progress bar for installation process
+- [x] FEATURE: add option to choose installation directory
+- [ ] BUG: if user tries to install an appimage that is already installed, it should prompt them to either overwrite the existing one or cancel the installation, not fail with an error
+
+## File/Package Support
+- [ ] FEATURE: handle .dkpg / .rpm files
+- [ ] FEATURE: add support for installing .flatpak files
+- [ ] FEATURE: make the app file opener for .appimage files
+
+## Packaging & Distribution
+- [ ] IMPROVEMENT: package up as dpkg
+- [ ] IMPROVEMENT: add support for more package managers (e.g. apt, yum)
+
+## Quality & Testing
+- [ ] IMPROVEMENT: add test suite

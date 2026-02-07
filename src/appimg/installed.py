@@ -1,7 +1,6 @@
 """Track installed AppImages with metadata"""
 
 import json
-from datetime import datetime
 from pathlib import Path
 from dataclasses import dataclass, asdict
 from typing import List, Optional
