@@ -7,7 +7,10 @@
 - [ ] FEATURE: add support for multiple languages
 - [ ] FEATURE: add progress bar for installation process
 - [x] FEATURE: add option to choose installation directory
-- [ ] BUG: if user tries to install an appimage that is already installed, it should prompt them to either overwrite the existing one or cancel the installation, not fail with an error
+- [x] BUG: if user tries to install an appimage that is already installed, it should prompt them to either overwrite the existing one or cancel the installation, not fail with an error
+- [ ] BUG: application gets launched immediately after installation, even if the user has not chosen to do so (and we get the application is not responding error)
+  - Reverted to working version (d391c63) - need to re-implement overwrite confirmation differently
+
 
 ## File/Package Support
 - [ ] FEATURE: handle .dkpg / .rpm files
