@@ -3,9 +3,17 @@ set -e
 
 # Post-installation script for badgerdrop
 
+case "$1" in
+    configure)
+        # Update MIME association
+        update-mime-database /usr/share/mime >/dev/null 2>&1 || true
+        
+        # Update desktop database
+        update-desktop-database /usr/share/applications >/dev/null 2>&1 || true
+        
         # Set badgerdrop as default handler for AppImage files
-            xdg-mime default badgerdrop.desktop application/x-appimage
-        fi
+        xdg-mime default badgerdrop.desktop application/vnd.appimage
+        xdg-mime default badgerdrop.desktop application/x-appimage
         ;;
     
     abort-upgrade|abort-remove|abort-deconfigure)

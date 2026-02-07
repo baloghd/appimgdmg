@@ -3,11 +3,10 @@ set -e
 
 # Pre-removal script for badgerdrop
 
-        # Remove badgerdrop as default handler (restore to nothing)
-        if [ -x /usr/bin/xdg-mime ]; then
-            # We don't set a new default, user can choose another
-            :
-        fi
+case "$1" in
+    remove|upgrade|deconfigure)
+        # Remove badgerdrop as default handler
+        # We don't set a new default, user can choose another
         ;;
     
     failed-upgrade)
