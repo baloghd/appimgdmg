@@ -8,7 +8,7 @@ from gi.repository import Gio
 class NotificationManager:
     """Manage desktop notifications for the application"""
     
-    def __init__(self, app_id="appimg", settings_manager=None):
+    def __init__(self, app_id="badgerdrop", settings_manager=None):
         self.app_id = app_id
         self.settings = settings_manager
         self._application = None

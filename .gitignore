@@ -69,7 +69,7 @@ Thumbs.db
 squashfs-root/
 
 # Debian packaging build artifacts
-debian/appimg/
+debian/badgerdrop/
 debian/files
 debian/*.substvars
 debian/*.deb

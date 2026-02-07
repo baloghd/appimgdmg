@@ -1,23 +1,10 @@
 #!/bin/sh
 set -e
 
-# Post-installation script for appimg
+# Post-installation script for badgerdrop
 
-case "$1" in
-    configure)
-        # Update MIME association database
-        if [ -x /usr/bin/update-mime-database ]; then
-            update-mime-database /usr/share/mime
-        fi
-        
-        # Update desktop database
-        if [ -x /usr/bin/update-desktop-database ]; then
-            update-desktop-database /usr/share/applications
-        fi
-        
-        # Set appimg as default handler for AppImage files
-        if [ -x /usr/bin/xdg-mime ]; then
-            xdg-mime default appimg.desktop application/x-appimage
+        # Set badgerdrop as default handler for AppImage files
+            xdg-mime default badgerdrop.desktop application/x-appimage
         fi
         ;;
     

@@ -42,7 +42,7 @@ class AppImageParser:
     
     def parse(self) -> AppImageInfo:
         """Extract all metadata from the AppImage"""
-        self._temp_dir = Path(tempfile.mkdtemp(prefix="appimg_"))
+        self._temp_dir = Path(tempfile.mkdtemp(prefix="badgerdrop_"))
         
         if self.debug:
             print(f"[DEBUG] Extracting AppImage to: {self._temp_dir}")

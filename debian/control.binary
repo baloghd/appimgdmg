@@ -1,15 +1,10 @@
-Source: badgerdrop
+Package: badgerdrop
+Version: 0.1.0
 Section: utils
 Priority: optional
 Maintainer: BadgerDrop Team <badgerdrop@example.com>
-Build-Depends: debhelper (>= 13), dh-python, python3-all, python3-setuptools
-Standards-Version: 4.6.0
-Homepage: https://github.com/anomalyco/badgerdrop
-
-Package: badgerdrop
 Architecture: all
-Depends: ${python3:Depends}, ${misc:Depends},
-         python3 (>= 3.11),
+Depends: python3 (>= 3.11),
          python3-gi,
          gir1.2-gtk-4.0,
          gir1.2-adw-1,

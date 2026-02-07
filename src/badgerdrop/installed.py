@@ -25,7 +25,7 @@ class InstalledAppsManager:
     """Manage registry of installed AppImages"""
 
     def __init__(self):
-        self.config_dir = Path.home() / ".config" / "appimg"
+        self.config_dir = Path.home() / ".config" / "badgerdrop"
         self.registry_file = self.config_dir / "installed.json"
         self.config_dir.mkdir(parents=True, exist_ok=True)
         self.apps: List[InstalledApp] = []

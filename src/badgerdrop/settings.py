@@ -20,7 +20,7 @@ class SettingsManager:
     """Manage application settings"""
 
     def __init__(self):
-        self.config_dir = Path.home() / ".config" / "appimg"
+        self.config_dir = Path.home() / ".config" / "badgerdrop"
         self.config_dir.mkdir(parents=True, exist_ok=True)
         self.settings_file = self.config_dir / "settings.json"
         self._settings = self._load()

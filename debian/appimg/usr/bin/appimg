@@ -1,0 +1,3 @@
+#!/bin/sh
+# AppImg main entry point
+exec python3 -m appimg "$@"

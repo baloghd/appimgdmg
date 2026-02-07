@@ -1,7 +1,9 @@
 # AppImg Makefile
 # macOS-style AppImage installer for Linux
 
-.PHONY: help setup run debug format check test clean clean-all deps install-deps install-desktop uninstall-desktop build-dpkg install-package reinstall-package clean-dpkg
+VERSION ?= 0.1.0
+
+.PHONY: help setup run debug format check test clean clean-all deps install-deps install-desktop uninstall-desktop build-dpkg install-package reinstall-package clean-dpkg install-fpm build-rpm build-all clean-rpm
 
 # Default target
 help:
@@ -14,11 +16,11 @@ help:
 	@echo "  make run APP=path   - Run with specific AppImage"
 	@echo "  make debug APP=path - Run in debug mode with verbose output"
 	@echo "  make list           - List all installed AppImages"
-	@echo "  make install-desktop   - Register appimg as default AppImage handler"
+	@echo "  make install-desktop   - Register badgerdrop as default AppImage handler"
 	@echo "  make uninstall-desktop - Restore previous default handler"
 	@echo "  make test-status    - Check Cursor test app status"
 	@echo "  make test-install   - Install Cursor AppImage for testing"
-	@echo "  make test-run       - Run appimg with Cursor for testing"
+	@echo "  make test-run       - Run badgerdrop with Cursor for testing"
 	@echo "  make test-uninstall - Uninstall Cursor test app"
 	@echo "  make build-dpkg     - Build Debian .deb package"
 	@echo "  make install-package - Install built .deb package"
@@ -58,13 +60,13 @@ deps-arch:
 # Run the application
 run:
 	@echo "Starting AppImg..."
-	uv run appimg
+	uv run badgerdrop
 
 # Run in debug mode (requires APP=path/to/file)
 debug:
 ifdef APP
 	@echo "Running in debug mode: $(APP)"
-	uv run appimg-debug --appimage $(APP)
+	uv run badgerdrop-debug --appimage $(APP)
 else
 	@echo "Usage: make debug APP=/path/to/app.AppImage"
 	@exit 1
@@ -73,16 +75,16 @@ endif
 # List installed AppImages
 list:
 	@echo "Listing installed AppImages..."
-	uv run appimg-list
+	uv run badgerdrop-list
 
-# Register appimg as default AppImage handler
+# Register badgerdrop as default AppImage handler
 install-desktop:
-	@echo "Registering appimg as default AppImage handler..."
+	@echo "Registering badgerdrop as default AppImage handler..."
 	python3 scripts/install-desktop.py
 
-# Unregister appimg and restore previous handler
+# Unregister badgerdrop and restore previous handler
 uninstall-desktop:
-	@echo "Unregistering appimg as default AppImage handler..."
+	@echo "Unregistering badgerdrop as default AppImage handler..."
 	python3 scripts/uninstall-desktop.py
 
 # Format code
@@ -142,7 +144,7 @@ test-install:
 	@chmod +x "$(TEST_APPS_DIR)/Cursor-2.4.28-x86_64.AppImage"
 	@echo "✓ Installed to $(TEST_APPS_DIR)/Cursor-2.4.28-x86_64.AppImage"
 	@echo ""
-	@echo "Note: Desktop entry will be created when you drag-and-drop in appimg"
+	@echo "Note: Desktop entry will be created when you drag-and-drop in badgerdrop"
 	@echo "Run: make test-run"
 
 test-uninstall:
@@ -156,18 +158,18 @@ test-uninstall:
 	@echo "✓ Uninstall complete!"
 
 	test-run:
-	@echo "Running appimg with Cursor test AppImage..."
+	@echo "Running badgerdrop with Cursor test AppImage..."
 	@if [ ! -f "$(TEST_APPIMAGE)" ]; then \
 		echo "Error: $(TEST_APPIMAGE) not found"; \
 		echo "Run: make test-install first"; \
 		exit 1; \
 	fi
-	uv run appimg '$(TEST_APPIMAGE)'
+	uv run badgerdrop '$(TEST_APPIMAGE)'
 
 # Debian package building
 DPKG_DIR = debian
-BUILD_DIR = $(DPKG_DIR)/appimg
-DEB_FILE = ../appimg_0.1.0-1_all.deb
+BUILD_DIR = $(DPKG_DIR)/badgerdrop
+DEB_FILE = ../badgerdrop_0.1.0-1_all.deb
 
 build-dpkg:
 	@echo "Building Debian package..."
@@ -178,25 +180,31 @@ build-dpkg:
 	@mkdir -p $(BUILD_DIR)/usr/share/mime/packages
 	@mkdir -p $(BUILD_DIR)/usr/share/pixmaps
 	@echo "Installing Python package..."
-	@cp -r src/appimg $(BUILD_DIR)/usr/lib/python3/dist-packages/
+	@cp -r src/badgerdrop $(BUILD_DIR)/usr/lib/python3/dist-packages/
 	@echo "Installing entry points..."
-	@echo '#!/bin/sh' > $(BUILD_DIR)/usr/bin/appimg
-	@echo '# AppImg main entry point' >> $(BUILD_DIR)/usr/bin/appimg
-	@echo 'exec python3 -m appimg "$$@"' >> $(BUILD_DIR)/usr/bin/appimg
-	@echo '#!/bin/sh' > $(BUILD_DIR)/usr/bin/appimg-debug
-	@echo '# AppImg debug entry point' >> $(BUILD_DIR)/usr/bin/appimg-debug
-	@echo 'exec python3 -m appimg --debug "$$@"' >> $(BUILD_DIR)/usr/bin/appimg-debug
-	@echo '#!/bin/sh' > $(BUILD_DIR)/usr/bin/appimg-list
-	@echo '# AppImg list entry point' >> $(BUILD_DIR)/usr/bin/appimg-list
-	@echo 'exec python3 -c "from appimg.installed import InstalledAppsManager; import json; apps = InstalledAppsManager().get_all_apps(); print(json.dumps([{\"name\": a.name, \"version\": a.version, \"install_path\": a.install_path, \"install_date\": a.install_date} for a in apps], indent=2))"' >> $(BUILD_DIR)/usr/bin/appimg-list
-	@echo '#!/bin/sh' > $(BUILD_DIR)/usr/bin/appimg-sound
-	@echo '# AppImg sound toggle entry point' >> $(BUILD_DIR)/usr/bin/appimg-sound
-	@echo 'exec python3 -c "from appimg.settings import SettingsManager; s = SettingsManager(); s.play_sound_on_install = not s.play_sound_on_install; print(f\"Sound notifications: {\\\"enabled\\\" if s.play_sound_on_install else \\\"disabled\\\"}\")"' >> $(BUILD_DIR)/usr/bin/appimg-sound
-	@chmod +x $(BUILD_DIR)/usr/bin/appimg*
+	@echo '#!/bin/sh' > $(BUILD_DIR)/usr/bin/badgerdrop
+	@echo '# AppImg main entry point' >> $(BUILD_DIR)/usr/bin/badgerdrop
+	@echo 'exec python3 -m badgerdrop "$$@"' >> $(BUILD_DIR)/usr/bin/badgerdrop
+	@echo '#!/bin/sh' > $(BUILD_DIR)/usr/bin/badgerdrop-debug
+	@echo '# AppImg debug entry point' >> $(BUILD_DIR)/usr/bin/badgerdrop-debug
+	@echo 'exec python3 -m badgerdrop --debug "$$@"' >> $(BUILD_DIR)/usr/bin/badgerdrop-debug
+	@echo '#!/bin/sh' > $(BUILD_DIR)/usr/bin/badgerdrop-list
+	@echo '# AppImg list entry point' >> $(BUILD_DIR)/usr/bin/badgerdrop-list
+	@echo 'exec python3 -c "from badgerdrop.installed import InstalledAppsManager; import json; apps = InstalledAppsManager().get_all_apps(); print(json.dumps([{\"name\": a.name, \"version\": a.version, \"install_path\": a.install_path, \"install_date\": a.install_date} for a in apps], indent=2))"' >> $(BUILD_DIR)/usr/bin/badgerdrop-list
+	@echo '#!/bin/sh' > $(BUILD_DIR)/usr/bin/badgerdrop-sound
+	@echo '# AppImg sound toggle entry point' >> $(BUILD_DIR)/usr/bin/badgerdrop-sound
+	@echo 'exec python3 -c "from badgerdrop.settings import SettingsManager; s = SettingsManager(); s.play_sound_on_install = not s.play_sound_on_install; print(f\"Sound notifications: {\\\"enabled\\\" if s.play_sound_on_install else \\\"disabled\\\"}\")"' >> $(BUILD_DIR)/usr/bin/badgerdrop-sound
+	@chmod +x $(BUILD_DIR)/usr/bin/badgerdrop*
 	@echo "Installing desktop files..."
-	@cp data/appimg.desktop $(BUILD_DIR)/usr/share/applications/
-	@cp data/appimg.mime.xml $(BUILD_DIR)/usr/share/mime/packages/appimg.xml
-	@cp data/appimg.png $(BUILD_DIR)/usr/share/pixmaps/
+	@cp data/badgerdrop.desktop $(BUILD_DIR)/usr/share/applications/
+	@cp data/badgerdrop.mime.xml $(BUILD_DIR)/usr/share/mime/packages/badgerdrop.xml
+	@cp data/badgerdrop.svg $(BUILD_DIR)/usr/share/pixmaps/
+	@echo "Installing package control files..."
+	@mkdir -p $(BUILD_DIR)/DEBIAN
+	@cp debian/control.binary $(BUILD_DIR)/DEBIAN/control
+	@cp debian/postinst $(BUILD_DIR)/DEBIAN/
+	@cp debian/prerm $(BUILD_DIR)/DEBIAN/
+	@chmod +x $(BUILD_DIR)/DEBIAN/postinst $(BUILD_DIR)/DEBIAN/prerm
 	@echo "Building .deb package..."
 	@dpkg-deb --build $(BUILD_DIR) $(DEB_FILE)
 	@echo "✓ Package built: $(DEB_FILE)"
@@ -208,16 +216,16 @@ install-package:
 		echo "Error: Package not found. Run: make build-dpkg"; \
 		exit 1; \
 	fi
-	@echo "Installing appimg package..."
+	@echo "Installing badgerdrop package..."
 	@sudo dpkg -i $(DEB_FILE)
 	@echo "✓ Package installed!"
 	@echo ""
 	@echo "AppImg is now the default handler for .AppImage files"
-	@echo "You can now double-click any .AppImage to open it with appimg"
+	@echo "You can now double-click any .AppImage to open it with badgerdrop"
 
 reinstall-package:
-	@echo "Reinstalling appimg package..."
-	@sudo apt-get remove -y appimg 2>/dev/null || true
+	@echo "Reinstalling badgerdrop package..."
+	@sudo apt-get remove -y badgerdrop 2>/dev/null || true
 	@$(MAKE) build-dpkg
 	@$(MAKE) install-package
 	@echo "✓ Package reinstalled!"
@@ -254,3 +262,59 @@ test-status:
 	fi
 	@echo ""
 	@echo "To test: make test-install → make test-run → make test-uninstall"
+
+# ============================================
+# RPM Package Building (using fpm)
+# ============================================
+
+RPM_FILE = ../badgerdrop-$(VERSION)-1.noarch.rpm
+
+install-fpm:  ## Install fpm (Effing Package Management) for RPM building
+	@echo "Installing fpm..."
+	@echo "Note: fpm requires Ruby and RubyGems"
+	sudo apt-get update
+	sudo apt-get install -y ruby ruby-dev rubygems build-essential
+	sudo gem install fpm
+
+build-rpm: $(BUILD_DIR)/usr/bin/badgerdrop  ## Build RPM package using fpm
+	@echo "Building RPM package..."
+	@echo "Source: $(BUILD_DIR)/usr/"
+	@echo "Output: $(RPM_FILE)"
+	fpm -s dir -t rpm \
+		-n badgerdrop \
+		-v $(VERSION) \
+		--iteration 1 \
+		--architecture noarch \
+		--description "macOS-style AppImage installer for Linux" \
+		--url "https://github.com/xcvb/badgerdrop" \
+		--license "MIT" \
+		--vendor "xcvb" \
+		--maintainer "xcvb" \
+		-d "python3 >= 3.11" \
+		-d "python3-gobject-base" \
+		-d "gtk4" \
+		-d "libadwaita" \
+		--after-install debian/postinst \
+		--before-remove debian/prerm \
+		--prefix / \
+		-C $(BUILD_DIR) \
+		usr/ \
+		|| (echo "RPM build failed. Make sure fpm is installed (make install-fpm)" && exit 1)
+	@mv badgerdrop-$(VERSION)-1.noarch.rpm $(RPM_FILE) 2>/dev/null || true
+	@echo "✓ RPM package built: $(RPM_FILE)"
+
+clean-rpm:  ## Clean RPM build artifacts
+	@echo "Cleaning RPM build artifacts..."
+	@rm -f $(RPM_FILE)
+	@rm -f badgerdrop-$(VERSION)-1.noarch.rpm
+	@echo "✓ RPM artifacts cleaned!"
+
+# ============================================
+# Build All Packages
+# ============================================
+
+build-all: clean build-dpkg build-rpm  ## Build both .deb and .rpm packages
+	@echo ""
+	@echo "✓ All packages built successfully:"
+	@ls -lh $(DEB_FILE) $(RPM_FILE) 2>/dev/null || \
+		echo "  Packages location: $(DEB_FILE) and $(RPM_FILE)"

@@ -1,5 +1,5 @@
 [project]
-name = "appimg"
+name = "badgerdrop"
 version = "0.1.0"
 description = "macOS-style AppImage installer for Linux"
 requires-python = ">=3.11"
@@ -8,17 +8,17 @@ dependencies = [
 ]
 
 [project.scripts]
-appimg = "appimg:main"
-appimg-debug = "appimg:debug_main"
-appimg-list = "appimg:list_main"
-appimg-sound = "appimg:sound_toggle_main"
+badgerdrop = "badgerdrop:main"
+badgerdrop-debug = "badgerdrop:debug_main"
+badgerdrop-list = "badgerdrop:list_main"
+badgerdrop-sound = "badgerdrop:sound_toggle_main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/appimg"]
+packages = ["src/badgerdrop"]
 
 [tool.uv]
 dev-dependencies = [

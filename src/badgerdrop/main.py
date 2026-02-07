@@ -16,7 +16,7 @@ from .ui.window import MainWindow
 class AppImgApp(Adw.Application):
     def __init__(self):
         super().__init__(
-            application_id="dev.appimg.Installer",
+            application_id="dev.badgerdrop.Installer",
             flags=Gio.ApplicationFlags.HANDLES_OPEN,
         )
         self.window = None

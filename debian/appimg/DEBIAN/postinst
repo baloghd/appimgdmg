@@ -1,0 +1,35 @@
+#!/bin/sh
+set -e
+
+# Post-installation script for appimg
+
+case "$1" in
+    configure)
+        # Update MIME association database
+        if [ -x /usr/bin/update-mime-database ]; then
+            update-mime-database /usr/share/mime
+        fi
+        
+        # Update desktop database
+        if [ -x /usr/bin/update-desktop-database ]; then
+            update-desktop-database /usr/share/applications
+        fi
+        
+        # Set appimg as default handler for AppImage files
+        if [ -x /usr/bin/xdg-mime ]; then
+            xdg-mime default appimg.desktop application/x-appimage
+        fi
+        ;;
+    
+    abort-upgrade|abort-remove|abort-deconfigure)
+        ;;
+    
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0
