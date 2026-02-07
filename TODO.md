@@ -15,10 +15,21 @@
 ## File/Package Support
 - [ ] FEATURE: handle .dkpg / .rpm files
 - [ ] FEATURE: add support for installing .flatpak files
-- [ ] FEATURE: make the app file opener for .appimage files
+- [x] FEATURE: make the app file opener for .appimage files
+  - Created data/appimg.mime.xml MIME type definition (handles both application/vnd.appimage and application/x-appimage)
+  - Created data/appimg.desktop with MimeType association
+  - postinst script registers appimg as default handler
+  - prerm script unregisters on uninstall
+  - NOTE: Nautilus (GNOME Files) runs executable files directly instead of opening with default app. This is standard behavior.
+    - Web-downloaded AppImages (not executable): Double-click opens with appimg ✓
+    - Already executable AppImages: Double-click runs directly (expected - use right-click → "Open With appimg" if needed)
 
 ## Packaging & Distribution
-- [ ] IMPROVEMENT: package up as dpkg
+- [x] IMPROVEMENT: package up as dpkg
+  - Created debian/ packaging directory
+  - Built appimg_0.1.0-1_all.deb (44KB)
+  - Includes entry points: appimg, appimg-debug, appimg-list, appimg-sound
+  - Makefile targets: build-dpkg, install-package, reinstall-package, clean-dpkg
 - [ ] IMPROVEMENT: add support for more package managers (e.g. apt, yum)
 
 ## Quality & Testing

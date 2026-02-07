@@ -67,3 +67,14 @@ Thumbs.db
 # AppImage testing
 *.AppImage
 squashfs-root/
+
+# Debian packaging build artifacts
+debian/appimg/
+debian/files
+debian/*.substvars
+debian/*.deb
+debian/*.log
+debian/*.debhelper.log
+debian/*.debhelper
+debian/*-stamp
+*.deb

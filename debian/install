@@ -1,0 +1,9 @@
+usr/lib/python3/dist-packages/appimg/*
+usr/lib/python3/dist-packages/appimg/ui/*
+usr/bin/appimg
+usr/bin/appimg-debug
+usr/bin/appimg-list
+usr/bin/appimg-sound
+usr/share/applications/appimg.desktop
+usr/share/mime/packages/appimg.xml
+usr/share/pixmaps/appimg.png

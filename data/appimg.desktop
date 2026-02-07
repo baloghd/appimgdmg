@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=AppImg
+Comment=macOS-style AppImage installer for Linux
+Exec=/usr/bin/appimg %f
+Icon=appimg
+Type=Application
+Terminal=false
+Categories=System;PackageManager;
+MimeType=application/vnd.appimage;application/x-appimage;
